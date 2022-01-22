@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+<script>
+    function emailCheck() {
+        const memberEmail = document.getElementById("memberEmail").value;
+        console.log(memberEmail);
+        const checkResult = document.getElementById('email-Check');
+        $.ajax({
+            type : 'post', // 전송방식
+            url :'emailCheck', //요청주소 (컨트롤러)
+            data : {'memberEmail' :memberEmail},// 전송할데이터
+            dataType: 'text', //리턴받을 데이터 형식
+            success: function (result) { // 성공시 실행
+                console.log('성공');
+                console.log(result);
+                if (result == "ok"){
+                    checkResult.style.color='green';
+                    checkResult.innerHTML = "아이디가 굳입니다"
+                } else {
+                    checkResult.style.color = 'red';
+                    checkResult.innerHTML = '이미 사용중인 이메일 입니다';
+                }
+            },
+            error: function () {
+                console.log('실패')
+            },
+        });
+    }
+
+</script>
+
+</head>
+<body>
+
+<form action="/member/save" method="post" enctype="multipart/form-data">
+    <input type="text" id="memberEmail" name="memberEmail" placeholder="이메일" onblur="emailCheck()"> <br>
+    <span id="email-Check"></span><br>
+    <input type="text" name="memberPassword" placeholder="비밀번호"> <br>
+    <input type="text" name="memberName" placeholder="이름"> <br>
+    <input type="text" name="memberPhone" placeholder="번호"> <br>
+    <input type="file" name="mFile" value="파일첨부"> <br>
+    <input type="submit" value="회원가입">
+</form>
+
+</body>
+</html>

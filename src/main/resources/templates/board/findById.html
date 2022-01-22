@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+    <script>
+        const update = () => {
+                updateForm.submit();
+        }
+    </script>
+
+</head>
+<body>
+
+<h2> findById.html </h2>
+<a href="/board/"> 돌아가기 </a>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">번호</th>
+        <th scope="col">작성자</th>
+        <th scope="col">제목</th>
+        <th scope="col">작성내용</th>
+        <th scope="col">사진</th>
+        <th scope="col">작성시간</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <!--        수정기능, 수정화면(update.html)에서 비밀번호를 입력받고 일치하면 수정처리 일치하지 않으면 수정X
+                    수정처리도 post방식(폼에서 바로 요청하는)
+                             put방식 (ajax를 이용하여 요청하는) 두가지로 모두 해보기
+                             수정이 완료되면 수정후 상세페이지를 출력 -->
+        <td th:text="${board.boardId}">번호</td>
+        <td th:text="${board.boardWriter}">작성자</td>
+        <td th:text="${board.boardTitle}">제목</td>
+        <td th:text="${board.boardContents}">작성내용</td>
+        <td><img th:src="@{|/image/${board.BFilename}|}" alt="로딩" style="width:50px; height:50px;"> </td>
+        <td th:text="${board.boardDate}">작성시간</td>
+
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{|/board/update/${board.boardId}|}" th:if="${board.getBoardWriter().equals(session['loginEmail'])}">수정하기</a>
+<button th:if="${board.getBoardWriter().equals(session['loginEmail'])}" th:onclick="deleteById([[${board.boardId}]])"> 삭제 </button>
+<button th:if="${session['loginEmail'].equals('admin')}" th:onclick="deleteById([[${board.boardId}]])"> 삭제 </button>
+<br><hr>
+<h2> 댓글 </h2>
+<div id="comment-write">
+    <input type="text" id="commentWriter" th:value="${session['loginEmail']}" readonly><br><br>
+    <input type="text" id="commentContents" placeholder="내용"><br><br>
+    <button id="comment-write-btn"> 댓글등록 </button>
+</div>
+
+<div id="comment-area">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">댓글번호</th>
+            <th scope="col">작성자</th>
+            <th scope="col">내용</th>
+            <th scope="col">작성시간</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment: ${comment}">
+            <td th:text="${comment.commentId}"> 댓글번호 </td>
+            <td th:text="${comment.commentWriter}"> 작성자 </td>
+            <td th:text="${comment.commentContents}"> 내용 </td>
+            <td th:text="${comment.createTime}"> 작성시간 </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+<script>
+    $("#comment-write-btn").click(function (){
+        console.log('댓글등록 버튼 클릭');
+        const commentWriter = $("#commentWriter").val();
+        const commentContents = $("#commentContents").val();
+        const boardId = '[[${board.boardId}]]';
+
+        $.ajax({
+            type:'post',
+            url: '/comment/save',
+            data:{
+                'commentWriter' : commentWriter,
+                'commentContents' : commentContents,
+                'boardId' : boardId
+            },
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                location.reload();
+            },
+            error: function () {
+                alert('ajax 실패');
+            }
+        })
+    })
+
+
+    function deleteById(boardId) {
+        console.log(boardId);
+        const reqUrl = "/board/"+boardId;
+        $.ajax({
+            type : 'delete',
+            url: reqUrl,
+            success: function () {
+                // 삭제를 성공하면 회원목록 페이지를 다시 요청하도록
+                location.href= '/board/';
+            },
+            error: function () {
+                alert('ajax 실패');
+            }
+        });
+    }
+</script>
+
+
+</html>

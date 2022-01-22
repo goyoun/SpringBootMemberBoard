@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        // 함수 이름이 memberUpdate, 매개변수가 없는 형태 -> function memberUpdate() 와 같은 뜻
+        const boardUpdate = () => {
+        // DOM API를 이용하여 boardId, 작성자, 비번, 제목, 내용을 가져와서 각각 javascript 함수에 담으시오.
+       const id = document.getElementById('boardId').value;
+       const id2 = document.getElementById('memberId').value;
+       const writer = document.querySelector('#boardWriter').value;
+       const title = document.querySelector('#boardTitle').value;
+       const contents = document.querySelector('#boardContents').value;
+       const bFilename = document.getElementById('bFilename').value;
+       // javascript object에 담아서 ajax로 컨트롤러에 보내기 위한 세팅
+       const updateData = JSON.stringify({
+          boardId: id,
+          memberId: id2,
+          boardWriter: writer,
+          boardTitle: title,
+          boardContents: contents,
+          boardFilename: bFilename
+        });
+        const reqUrl = "/board/" + id;
+        console.log(updateData)
+    $.ajax({
+          type: 'put', // put : 덮어씌우기, patch : 수정이 필요한 것만 바뀜
+          data: updateData,
+          url: reqUrl,
+          contentType: 'application/json', // json으로 보낼때는 꼭 써야함.
+          success: function () {
+          location.href = reqUrl;
+           },
+        error: function () {
+          alert('ajax 실패');
+          }
+           });
+          }
+    </script>
+
+</head>
+<body>
+<h2> update.html </h2>
+
+<input type="hidden" name="boardId" id="boardId" th:value="${board.boardId}"><br>
+<input type="hidden" name="memberId" id="memberId" th:value="${board.memberId}">
+<input type="text" name="bFilename" id="bFilename" th:value="${board.BFilename}">
+
+글쓴이 : <input type="text" name="boardWriter" id="boardWriter" th:value="${board.boardWriter}" placeholder="작성자" readonly> <br>
+제목 : <input type="text" name="boardTitle" id="boardTitle" th:value="${board.boardTitle}" placeholder="제목"> <br>
+내용 : <input type="text" name="boardContents" id="boardContents" th:value="${board.boardContents}" placeholder="내용"><br>
+
+<input type="button" value="수정하기" th:onclick="boardUpdate()">
+
+
+</body>
+</html>

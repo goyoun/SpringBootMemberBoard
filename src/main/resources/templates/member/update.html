@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        // 함수 이름이 memberUpdate, 매개변수가 없는 형태 -> function memberUpdate() 와 같은 뜻
+        const memberUpdate = () => {
+            console.log('수정함수호출');
+            // DOM API를 이용하여 memberId, 이메일, 비번, 이름을 가져와서 각각 javascript 함수에 담으시오.
+            const id = document.getElementById('memberId').value;
+            const email = document.querySelector('#memberEmail').value;
+            const password = $('#memberPassword').val();
+            const checkPassword = "[[${member.memberPassword}]]"
+            const name = document.querySelector('#memberName').value;
+            const phone = document.getElementById('memberPhone').value;
+            const memberFilename = document.getElementById('memberFilename').value;
+            console.log(id, email, password, name, memberFilename);
+            // javascript object에 담아서 ajax로 컨트롤러에 보내기 위한 세팅
+            if (password == checkPassword) {
+
+                const updateData = JSON.stringify({
+                    memberId: id,
+                    memberEmail: email,
+                    memberPassword: password,
+                    memberName: name,
+                    memberPhone: phone,
+                    memberFilename: memberFilename
+                });
+                const reqUrl = "/member/" + id;
+                console.log(updateData);
+                $.ajax({
+                    type: 'put', // put : 덮어씌우기, patch : 수정이 필요한 것만 바뀜
+                    data: updateData,
+                    url: reqUrl,
+                    contentType: 'application/json', // json으로 보낼때는 꼭 써야함.
+                    success: function () {
+                        location.href = "/board/";
+                    },
+                    error: function () {
+                        alert('ajax 실패');
+                    }
+                });
+            } else {
+                alert('비밀번호가 틀렸습니다');
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>update.html</h2>
+
+<form action="/member/update" method="post">
+    <input type="hidden" name="memberId" id="memberId" th:value="${member.memberId}"><br>
+    <input type="text" name="memberFilename" id="memberFilename" th:value="${member.memberFilename}"><br>
+    이메일 : <input type="text" name="memberEmail" id="memberEmail" th:value="${member.memberEmail}" placeholder="이메일" readonly> <br>
+    비밀번호 : <input type="text" name="memberPassword" id="memberPassword" th:value="${member.memberPassword}" placeholder="비밀번호"> <br>
+    이름 : <input type="text" name="memberName" id="memberName" th:value="${member.memberName}" placeholder="이름" readonly><br>
+    연락처 : <input type="text" name="memberPhone" id="memberPhone" th:value="${member.memberPhone}" placeholder="연락처"> <br>
+    <input type="button" value="수정(put)" th:onclick="memberUpdate()">
+    <!-- 누를 시 바로 가지는게 아닌 무언가 동작 후 가게하고싶을 때 타입을 버튼으로 사용 -->
+</form>
+
+</body>
+</html>
