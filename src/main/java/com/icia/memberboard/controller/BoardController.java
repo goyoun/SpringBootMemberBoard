@@ -79,7 +79,7 @@ public class BoardController {
         return "board/findById";
     }
 
-    // 회원삭제  (/member/5)
+    // 게시글 삭제  (/member/5)
     @DeleteMapping("/{boardId}")
     public ResponseEntity deleteById (@PathVariable Long boardId) {
         bs.deleteById(boardId);

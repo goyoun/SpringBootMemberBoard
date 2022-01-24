@@ -101,7 +101,7 @@
         <td th:text="${member.memberPassword}">비밀번호</td>
         <td th:text="${member.memberName}">이름</td>
         <td th:text="${member.memberPhone}">연락처</td>
-        <td><img th:src="@{|/image/${member.mFilename}|}" alt="로딩" style="width:50px; height:50px;"> </td>
+        <td><img th:src="@{|/image/${member.memberFilename}|}" alt="로딩" style="width:50px; height:50px;"> </td>
         <td> <a th:href="@{|/member/${member.memberId}|}"> 조회 </a> </td>
         <td> <button th:onclick="detail([[${member.memberId}]])"> 조회(ajax) </button> </td>
         <td>

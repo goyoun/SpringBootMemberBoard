@@ -106,13 +106,6 @@ public class MemberController {
         return "member/findAll";
     }
 
-    // 회원삭제 (/member/delete/1)
-    @GetMapping("delete/{memberId}")
-    public String deleteById(@PathVariable("memberId") Long memberId) {
-        ms.deleteById(memberId);
-        return "redirect:/member/";
-    }
-
     // 회원삭제 DeleteMapping
     @DeleteMapping("{memberId}")
     public ResponseEntity deleteById2(@PathVariable Long memberId) {

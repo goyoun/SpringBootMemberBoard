@@ -91,7 +91,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    @Transactional
+    @Transactional // jpa 가갖고있는 캐시를 DB에 반영함 (커밋하는느낌) 조회수처리를할때도
     public BoardDetailDTO findById(Long boardId) {
         int boardHits = br.boardHits(boardId);
         /*

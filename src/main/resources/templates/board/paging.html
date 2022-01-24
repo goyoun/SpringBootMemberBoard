@@ -10,14 +10,15 @@
 
 <body class="container">
 
-<h2>회원제 게시판</h2>
-<a href="/board/save"> 글쓰기 </a>
-<p th:text="${session['loginEmail']}"></p>
-로그인넘버 : <p th:text="${session['memberId']}"></p>
+<h2>회원제 게시판</h2><hr>
+로그인 이메일 <p th:text="${session['loginEmail']}"></p> <hr>
+로그인넘버 <p th:text="${session['memberId']}"></p> <hr>
 <a th:href="@{|/member/mypage/${session['memberId']}|}">마이페이지</a>
-<button class="btn-danger" onclick="logout()"> 로그아웃 </button>
 <a th:if="${session['loginEmail'].equals('admin')}" href="/member/adminPage/"> 관리자페이지 </a>
-
+<button  onclick="logout()"> 로그아웃 </button>
+<hr>
+<a href="/board/save"> 글쓰기 </a>
+<hr>
 <!--<c:choose>-->
 <!--    <c:when test="${session.loginEmail eq board.loginEmail}">-->
 <!--        <a href="/board/save"> 글쓰기 </a>-->
