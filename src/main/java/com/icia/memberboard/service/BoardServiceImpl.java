@@ -70,6 +70,7 @@ public class BoardServiceImpl implements BoardService{
         return boardList;
     }
 
+    //페이징
     @Override
     public Page<BoardPagingDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber();
